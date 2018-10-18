@@ -1,8 +1,6 @@
-const actionCreator = (type, payload) => {
-    return {
-        type,
-        payload,
-    }
-};
+const actionCreator = (type, payload) => ({
+  type,
+  payload,
+});
 
 export default actionCreator;

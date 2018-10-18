@@ -1,6 +1,9 @@
 .container {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  height: 130px;
+  flex-wrap: wrap;
+  margin: 40px;
+  > div {
+    margin-right: 20px;
+  }
 }

@@ -1,45 +1,70 @@
 const webpack = require('webpack');
 const path = require('path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+module.exports = (env, { devserver = false }) => {
+  const isProd = env === 'production';
+
+  return {
     context: __dirname,
-    devtool: "eval-source-map",
-    entry: "./src/app.js",
+    devtool: 'eval-source-map',
+    entry: './src/app.jsx',
     output: {
-        path: __dirname + "/build",
-        filename: "app.min.js"
+      path: path.resolve(__dirname, 'build'),
+      filename: isProd ? 'app.min.js' : 'app.js',
+    },
+    mode: isProd ? 'production' : 'development',
+    devServer: {
+      contentBase: path.join(__dirname, 'build'),
+      compress: true,
+      port: 8080,
+      open: true,
     },
     module: {
-        loaders: [
+      rules: [
+        {
+          test: /\.jsx?$/,
+          loader: 'babel-loader',
+          exclude: /(node_modules)/,
+
+        },
+        {
+          test: /\.scss$/,
+          loaders: [
+            'style-loader?sourceMap',
             {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react'],
-                    plugins: ['transform-object-rest-spread'],
-                }
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: true,
+                localIdentName: isProd ? '[hash:base64:5]' : '[path]___[name]__[local]___[hash:base64:5]',
+              },
             },
-            {
-                test: /\.scss$/,
-                loaders: [
-                    'style-loader?sourceMap',
-                    'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
-                    'sass-loader',
-                ]
-            },
-            {
-                test: /\.css$/,
-                loaders: [
-                    'style-loader?sourceMap',
-                    'css-loader',
-                ]
-            }
-        ]
+            'sass-loader',
+          ],
+        },
+        {
+          test: /\.css$/,
+          loaders: [
+            'style-loader?sourceMap',
+            'css-loader',
+          ],
+        },
+      ],
     },
     resolve: {
-        modules: [path.resolve(__dirname, "src/js"), path.resolve(__dirname, "src"), "node_modules"]
+      extensions: ['.js', '.jsx'],
+      modules: [path.resolve(__dirname, 'src/js'), path.resolve(__dirname, 'src'), 'node_modules'],
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-    ],
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(env),
+      }),
+      isProd ? null : new BundleAnalyzerPlugin(),
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, 'index.html'),
+      }),
+    ].filter(plugin => !!plugin),
+  };
 };
