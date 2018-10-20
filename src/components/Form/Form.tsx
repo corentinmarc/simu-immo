@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'react-proptypes';
 import NumberInput from 'material-ui-number-input';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import CSSModules from 'react-css-modules';
+import { bindActionCreators, Dispatch } from 'redux';
 
 import {
   setCapital,
@@ -12,11 +10,13 @@ import {
   setInterestRate,
   setFormValue,
 } from 'actions/form';
+import { FormField } from 'reducers/form';
+import { GlobalState } from 'reducers';
 
 import FormSelector from './FormSelector';
 import styles from './Form.scss';
 
-const mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = (dispatch: Dispatch<GlobalState>) => bindActionCreators({
   setCapital,
   setDuration,
   setInsuranceRate,
@@ -24,23 +24,47 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   setFormValue,
 }, dispatch);
 
-class Form extends Component {
-  onChange(type, value) {
+export interface StateProps {
+  capital: number;
+  duration: number;
+  interestRate: number;
+  insuranceRate: number;
+  notaryRate: number;
+  intercalaryFees: number;
+}
+
+interface DispatchProps {
+  setCapital: typeof setCapital,
+  setDuration: typeof setDuration,
+  setInsuranceRate: typeof setInsuranceRate,
+  setInterestRate: typeof setInterestRate,
+  setFormValue: typeof setFormValue,
+}
+
+type AllProps = StateProps & DispatchProps;
+
+class Form extends Component<AllProps> {
+  onChange = (type: FormField, value: string) => {
     this.props.setFormValue({ [type]: value });
   }
 
   render() {
     const {
-      capital, duration, interestRate, insuranceRate, notaryRate, intercalaryFees,
+      capital,
+      duration,
+      interestRate,
+      insuranceRate,
+      notaryRate,
+      intercalaryFees,
     } = this.props;
     return (
-      <div styleName="container">
+      <div className={styles.container}>
         <NumberInput
           id="capital"
           min={0}
           max={1000000}
           floatingLabelText="Capital à emprunter"
-          value={capital}
+          value={capital.toString()}
           onChange={(e, value) => this.onChange('capital', value)}
         />
         <NumberInput
@@ -48,7 +72,7 @@ class Form extends Component {
           min={0}
           max={100}
           floatingLabelText="Taux intérêt (%)"
-          value={interestRate}
+          value={interestRate.toString()}
           onChange={(e, value) => this.onChange('interestRate', value)}
         />
         <NumberInput
@@ -56,7 +80,7 @@ class Form extends Component {
           min={0}
           max={100}
           floatingLabelText="Taux assurance (%)"
-          value={insuranceRate}
+          value={insuranceRate.toString()}
           onChange={(e, value) => this.onChange('insuranceRate', value)}
         />
         <NumberInput
@@ -64,7 +88,7 @@ class Form extends Component {
           min={0}
           max={100}
           floatingLabelText="Durée emprunt (années)"
-          value={duration}
+          value={duration.toString()}
           onChange={(e, value) => this.onChange('duration', value)}
         />
         <NumberInput
@@ -72,7 +96,7 @@ class Form extends Component {
           min={0}
           max={100}
           floatingLabelText="Taux notaire (%)"
-          value={notaryRate}
+          value={notaryRate.toString()}
           onChange={(e, value) => this.onChange('notaryRate', value)}
         />
         <NumberInput
@@ -80,7 +104,7 @@ class Form extends Component {
           min={0}
           max={100}
           floatingLabelText="Frais intercalaire (€)"
-          value={intercalaryFees}
+          value={intercalaryFees.toString()}
           onChange={(e, value) => this.onChange('intercalaryFees', value)}
         />
       </div>
@@ -88,17 +112,7 @@ class Form extends Component {
   }
 }
 
-Form.propTypes = {
-  capital: PropTypes.string.isRequired,
-  duration: PropTypes.string.isRequired,
-  interestRate: PropTypes.string.isRequired,
-  insuranceRate: PropTypes.string.isRequired,
-  notaryRate: PropTypes.string.isRequired,
-  intercalaryFees: PropTypes.string.isRequired,
-  setFormValue: PropTypes.func.isRequired,
-};
-
 export default connect(
   FormSelector,
   mapDispatchToProps,
-)(CSSModules(Form, styles));
+)(Form);

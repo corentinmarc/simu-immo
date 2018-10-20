@@ -5,19 +5,34 @@ import {
   SET_CAPITAL,
   SET_FORM_VALUE,
 } from 'constants/actions/form';
+import { AllActions } from 'actions';
+import { Partial } from 'types';
 
-const setFormValue = (state, payload) => ({ ...state, ...payload });
+export interface FormState {
+  capital: number;
+  interestRate: number;
+  insuranceRate: number;
+  duration: number;
+  notaryRate: number;
+  intercalaryFees: number;
+}
+
+export type FormField = keyof FormState;
+
+export type FormValue = Partial<FormState>;
+
+const setFormValue = (state: FormState, payload: FormValue): FormState => ({ ...state, ...payload });
 
 const initialState = {
-  capital: '320000',
-  interestRate: '1.7',
-  insuranceRate: '0.4',
-  duration: '25',
-  notaryRate: '2.5',
-  intercalaryFees: '8000',
+  capital: 305000,
+  interestRate: 1.5,
+  insuranceRate: 0.2,
+  duration: 25,
+  notaryRate: 2.5,
+  intercalaryFees: 8000,
 };
 
-const formReducer = (state = initialState, action) => {
+const formReducer = (state = initialState, action: AllActions) => {
   switch (action.type) {
     case SET_FORM_VALUE:
       return setFormValue(state, action.payload);

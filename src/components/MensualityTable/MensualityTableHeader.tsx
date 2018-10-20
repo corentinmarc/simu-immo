@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { SFC } from 'react';
 import classnames from 'classnames';
 
 import styles from './MensualityTable.scss';
 
-const MensualityTableHeader = () => (
+interface Props {};
+
+const MensualityTableHeader: SFC<Props> = () => (
   <div className={classnames(styles.line, styles['line-header'])}>
     <div className={classnames(styles['line-month'])}>Mensualité n°</div>
     <div className={classnames(styles['line-cost-capital'])}>Capital remboursé</div>

@@ -9,7 +9,7 @@ module.exports = (env, { devserver = false }) => {
   return {
     context: __dirname,
     devtool: 'eval-source-map',
-    entry: './src/app.jsx',
+    entry: './src/app.tsx',
     output: {
       path: path.resolve(__dirname, 'build'),
       filename: isProd ? 'app.min.js' : 'app.js',
@@ -28,6 +28,13 @@ module.exports = (env, { devserver = false }) => {
           loader: 'babel-loader',
           exclude: /(node_modules)/,
 
+        },
+        {
+          test: /\.tsx?$/,
+          loader: 'awesome-typescript-loader',
+          options: {
+            useCache: true,
+          },
         },
         {
           test: /\.scss$/,
@@ -54,7 +61,7 @@ module.exports = (env, { devserver = false }) => {
       ],
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
       modules: [path.resolve(__dirname, 'src/js'), path.resolve(__dirname, 'src'), 'node_modules'],
     },
     plugins: [
