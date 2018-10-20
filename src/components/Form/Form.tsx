@@ -63,7 +63,7 @@ class Form extends Component<AllProps> {
           id="capital"
           min={0}
           max={1000000}
-          floatingLabelText="Capital à emprunter"
+          floatingLabelText="Capital &agrave; emprunter"
           value={capital.toString()}
           onChange={(e, value) => this.onChange('capital', value)}
         />
@@ -71,7 +71,7 @@ class Form extends Component<AllProps> {
           id="interestRate"
           min={0}
           max={100}
-          floatingLabelText="Taux intérêt (%)"
+          floatingLabelText="Taux int&eacute;r&ecirc;t (%)"
           value={interestRate.toString()}
           onChange={(e, value) => this.onChange('interestRate', value)}
         />
@@ -87,7 +87,7 @@ class Form extends Component<AllProps> {
           id="duration"
           min={0}
           max={100}
-          floatingLabelText="Durée emprunt (années)"
+          floatingLabelText="Dur&eacute;e emprunt (ann&eacute;es)"
           value={duration.toString()}
           onChange={(e, value) => this.onChange('duration', value)}
         />
@@ -103,7 +103,7 @@ class Form extends Component<AllProps> {
           id="intercalaryFees"
           min={0}
           max={100}
-          floatingLabelText="Frais intercalaire (€)"
+          floatingLabelText="Frais intercalaire (&euro;)"
           value={intercalaryFees.toString()}
           onChange={(e, value) => this.onChange('intercalaryFees', value)}
         />

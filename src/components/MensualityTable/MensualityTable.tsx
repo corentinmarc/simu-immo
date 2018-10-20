@@ -225,57 +225,36 @@ class MensualityTable extends Component<AllProps, State> {
         <div className={styles['line-month']}>TOTAL</div>
         <div className={styles['line-cost-capital']}>
           <span className={styles['price-total']}>
-            { formatPrice(totalCapitalCost) }
-€
+            { formatPrice(totalCapitalCost) } &euro;
           </span>
           <span className={styles['percent-total']}>
-(
-            { formatPercent(totalRatioCapital) }
-            {' '}
-/
-            {formatPercent(totalRatioCapital * (totalCost / greatTotalCost))}
-            {' '}
-)
+            ( { formatPercent(totalRatioCapital) } / {formatPercent(totalRatioCapital * (totalCost / greatTotalCost))} )
           </span>
         </div>
         <div className={styles['line-cost-interest']}>
           <span className={styles['price-total']}>
-            { formatPrice(totalInterestCost) }
-€
+            { formatPrice(totalInterestCost) } &euro;
           </span>
           <span className={styles['percent-total']}>
-(
-            { (totalRatioInterest * 100).toFixed(1) }
-% /
-            {formatPercent(totalRatioInterest * (totalCost / greatTotalCost))}
-            {' '}
-)
+            ( { (totalRatioInterest * 100).toFixed(1) } % / {formatPercent(totalRatioInterest * (totalCost / greatTotalCost))} )
           </span>
         </div>
         <div className={styles['line-cost-insurance']}>
           <span className={styles['price-total']}>
-            { formatPrice(totalInsuranceCost) }
-€
+            { formatPrice(totalInsuranceCost) } &euro;
           </span>
           <span className={styles['percent-total']}>
-(
-            { (totalRatioInsurance * 100).toFixed(1) }
-% /
-            {formatPercent(totalRatioInsurance * (totalCost / greatTotalCost))}
-            {' '}
-)
+            ( { (totalRatioInsurance * 100).toFixed(1) } % / {formatPercent(totalRatioInsurance * (totalCost / greatTotalCost))} )
           </span>
         </div>
         <div className={styles['line-cost-cumul']}>
           <span className={styles['price-total']}>
-            { formatPrice(totalCost) }
-€
+            { formatPrice(totalCost) } &euro;
           </span>
         </div>
         <div className={styles['line-total-cost-cumul']}>
           <span className={styles['price']}>
-            { formatPrice(greatTotalCost) }
-€
+            { formatPrice(greatTotalCost) } &euro;
           </span>
         </div>
       </div>
@@ -304,58 +283,40 @@ class MensualityTable extends Component<AllProps, State> {
               const monthLine = (
                 <div className={styles['line']}>
                   <div className={styles['line-month']}>
-                    { month + 1 }
-                    {' '}
-  /
-                    {' '}
-                    { datas.length }
+                    { month + 1 } / { datas.length }
                   </div>
                   <div className={styles['line-cost-capital']}>
                     <span className={styles['price']}>
-                      { formatPrice(costCapital) }
-  €
+                      { formatPrice(costCapital) } &euro;
                     </span>
                     <span className={styles['percent']}>
-  (
-                      { formatPercent(ratioCapital) }
-                      {' '}
-  )
+                      ( { formatPercent(ratioCapital) } )
                     </span>
                   </div>
                   <div className={styles['line-cost-interest']}>
                     <span className={styles['price']}>
-                      { formatPrice(costInterest) }
-  €
+                      { formatPrice(costInterest) } &euro;
                     </span>
                     <span className={styles['percent']}>
-  (
-                      { formatPercent(ratioInterest) }
-                      {' '}
-  )
+                      ( { formatPercent(ratioInterest) } )
                     </span>
                   </div>
                   <div className={styles['line-cost-insurance']}>
                     <span className={styles['price']}>
-                      { formatPrice(costInsurance) }
-  €
+                      { formatPrice(costInsurance) } &euro;
                     </span>
                     <span className={styles['percent']}>
-  (
-                      { formatPercent(ratioInsurance) }
-                      {' '}
-  )
+                      ( { formatPercent(ratioInsurance) } )
                     </span>
                   </div>
                   <div className={styles['line-cost-cumul']}>
                     <span className={styles['price']}>
-                      { formatPrice(costCumulate) }
-  €
+                      { formatPrice(costCumulate) } &euro;
                     </span>
                   </div>
                   <div className={styles['line-total-cost-cumul']}>
                     <span className={styles['price']}>
-                      { formatPrice(costCumulate + startCost) }
-  €
+                      { formatPrice(costCumulate + startCost) } &euro;
                     </span>
                   </div>
                 </div>
@@ -387,19 +348,14 @@ class MensualityTable extends Component<AllProps, State> {
                 const yearLine = (
                   <div className={classnames(styles['line'], styles['line-year'])}>
                     <div className={styles['line-month']}>
-                      Année
-                      { year }
+                      Ann&eacute;e { year }
                     </div>
                     <div className={styles['line-cost-capital']}>
                       <span className={styles['price']}>
-                        { formatPrice(costCapitalYear) }
-                        €
+                        { formatPrice(costCapitalYear) } &euro;
                       </span>
                       <span className={styles['percent']}>
-                        (
-                        { formatPercent(ratioCapitalYear) }
-                        {' '}
-                        /
+                        ( { formatPercent(ratioCapitalYear) } /
                         { formatPercent(
                           ratioCapitalYear * costCumulateYear
                           / (costCumulateYear + startCost),
@@ -409,8 +365,7 @@ class MensualityTable extends Component<AllProps, State> {
                     </div>
                     <div className={styles['line-cost-interest']}>
                       <span className={styles['price']}>
-                        { formatPrice(costInterestYear) }
-                        €
+                        { formatPrice(costInterestYear) } &euro;
                       </span>
                       <span className={styles['percent']}>
                         (
@@ -426,8 +381,7 @@ class MensualityTable extends Component<AllProps, State> {
                     </div>
                     <div className={styles['line-cost-insurance']}>
                       <span className={styles['price']}>
-                        { formatPrice(costInsuranceYear) }
-                        €
+                        { formatPrice(costInsuranceYear) } &euro;
                       </span>
                       <span className={styles['percent']}>
                         (
@@ -443,14 +397,12 @@ class MensualityTable extends Component<AllProps, State> {
                     </div>
                     <div className={styles['line-cost-cumul']}>
                       <span className={styles['price']}>
-                        { formatPrice(costCumulateYear) }
-                        €
+                        { formatPrice(costCumulateYear) } &euro;
                       </span>
                     </div>
                     <div className={styles['line-total-cost-cumul']}>
                       <span className={styles['price']}>
-                        { formatPrice(costCumulateYear + startCost) }
-                        €
+                        { formatPrice(costCumulateYear + startCost) } &euro;
                       </span>
                     </div>
                   </div>
