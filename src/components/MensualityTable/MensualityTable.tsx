@@ -17,7 +17,7 @@ const computeCapitalPercent = (i: number, {
   interestRate,
 }: {
   duration: number,
-  interestRate: number
+  interestRate: number,
 }) => 1 / ((1 + (interestRate / 12 / 100)) ** (duration * 12 - i)) * 100;
 
 const getAverageCapitalPercent = ({
@@ -155,13 +155,15 @@ class MensualityTable extends Component<AllProps, State> {
     let datas = range(0, nbMonth).map((i) => {
       const percentCapital = computeCapitalPercent(i, { duration, interestRate });
       return {
-        month: i,
         percentCapital,
+        month: i,
         percentInterest: 100 - percentCapital,
         percentInsurance: totalInsurancePercent,
         ratioCapital: percentCapital / (100 + (totalInsurancePercent * totalCapitalPercent / 100)),
-        ratioInterest: (100 - percentCapital) / (100 + (totalInsurancePercent * totalCapitalPercent / 100)), //eslint-disable-line
-        ratioInsurance: (totalInsurancePercent * totalCapitalPercent / 100) / (100 + (totalInsurancePercent * totalCapitalPercent / 100)), //eslint-disable-line
+        ratioInterest: (100 - percentCapital) /
+          (100 + (totalInsurancePercent * totalCapitalPercent / 100)),
+        ratioInsurance: (totalInsurancePercent * totalCapitalPercent / 100) /
+          (100 + (totalInsurancePercent * totalCapitalPercent / 100)),
       };
     });
 
@@ -192,7 +194,6 @@ class MensualityTable extends Component<AllProps, State> {
     }));
 
     this.setState({
-      datas: datas as Data[],
       totalRatioCapital,
       totalRatioInterest,
       totalRatioInsurance,
@@ -204,6 +205,7 @@ class MensualityTable extends Component<AllProps, State> {
       notaryCost,
       greatTotalCost,
       startCost,
+      datas: datas as Data[],
       intercalaryFees: Number(intercalaryFees),
     });
   }
@@ -228,7 +230,8 @@ class MensualityTable extends Component<AllProps, State> {
             { formatPrice(totalCapitalCost) } &euro;
           </span>
           <span className={styles['percent-total']}>
-            ( { formatPercent(totalRatioCapital) } / {formatPercent(totalRatioCapital * (totalCost / greatTotalCost))} )
+            ( { formatPercent(totalRatioCapital) } /
+              {formatPercent(totalRatioCapital * (totalCost / greatTotalCost))} )
           </span>
         </div>
         <div className={styles['line-cost-interest']}>
@@ -236,7 +239,8 @@ class MensualityTable extends Component<AllProps, State> {
             { formatPrice(totalInterestCost) } &euro;
           </span>
           <span className={styles['percent-total']}>
-            ( { (totalRatioInterest * 100).toFixed(1) } % / {formatPercent(totalRatioInterest * (totalCost / greatTotalCost))} )
+            ( { (totalRatioInterest * 100).toFixed(1) } % /
+              {formatPercent(totalRatioInterest * (totalCost / greatTotalCost))} )
           </span>
         </div>
         <div className={styles['line-cost-insurance']}>
@@ -244,7 +248,8 @@ class MensualityTable extends Component<AllProps, State> {
             { formatPrice(totalInsuranceCost) } &euro;
           </span>
           <span className={styles['percent-total']}>
-            ( { (totalRatioInsurance * 100).toFixed(1) } % / {formatPercent(totalRatioInsurance * (totalCost / greatTotalCost))} )
+            ( { (totalRatioInsurance * 100).toFixed(1) } % /
+              {formatPercent(totalRatioInsurance * (totalCost / greatTotalCost))} )
           </span>
         </div>
         <div className={styles['line-cost-cumul']}>
@@ -423,7 +428,8 @@ class MensualityTable extends Component<AllProps, State> {
       capital, duration, interestRate, insuranceRate,
     } = this.props;
 
-    const ready = capital && duration && typeof interestRate !== 'undefined' && typeof insuranceRate !== 'undefined';
+    const ready = capital && duration &&
+      typeof interestRate !== 'undefined' && typeof insuranceRate !== 'undefined';
 
     return (
       <div>

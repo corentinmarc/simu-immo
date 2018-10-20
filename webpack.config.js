@@ -3,6 +3,7 @@ const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// eslint-disable-next-line
 module.exports = (env, { devserver = false }) => {
   const isProd = env === 'production';
 

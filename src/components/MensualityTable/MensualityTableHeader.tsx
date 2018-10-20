@@ -3,7 +3,7 @@ import classnames from 'classnames';
 
 import styles from './MensualityTable.scss';
 
-interface Props {};
+interface Props {}
 
 const MensualityTableHeader: SFC<Props> = () => (
   <div className={classnames(styles.line, styles['line-header'])}>
