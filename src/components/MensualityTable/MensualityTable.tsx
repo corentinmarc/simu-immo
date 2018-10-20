@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { range } from 'lodash';
+import { range } from 'lodash-es';
 import numeral from 'numeral';
 import classnames from 'classnames';
 

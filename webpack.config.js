@@ -8,7 +8,7 @@ module.exports = (env, { devserver = false }) => {
 
   return {
     context: __dirname,
-    devtool: 'eval-source-map',
+    devtool: isProd ? false : 'eval-source-map',
     entry: './src/app.tsx',
     output: {
       path: path.resolve(__dirname, 'build'),
