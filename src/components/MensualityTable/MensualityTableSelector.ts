@@ -4,7 +4,10 @@ import { formValueSelector } from 'selectors/form';
 import { StateProps } from './MensualityTable';
 import { GlobalState } from 'reducers';
 
-const MensualityTableSelector = createStructuredSelector<GlobalState, StateProps>({
+const MensualityTableSelector = createStructuredSelector<
+  GlobalState,
+  StateProps
+>({
   capital: formValueSelector('capital'),
   interestRate: formValueSelector('interestRate'),
   insuranceRate: formValueSelector('insuranceRate'),

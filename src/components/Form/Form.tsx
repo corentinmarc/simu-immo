@@ -16,16 +16,17 @@ import { GlobalState } from 'reducers';
 import FormSelector from './FormSelector';
 import styles from './Form.scss';
 
-const mapDispatchToProps = (dispatch: Dispatch<GlobalState>) => bindActionCreators(
-  {
-    setCapital,
-    setDuration,
-    setInsuranceRate,
-    setInterestRate,
-    setFormValue,
-  },
-  dispatch,
-);
+const mapDispatchToProps = (dispatch: Dispatch<GlobalState>) =>
+  bindActionCreators(
+    {
+      setCapital,
+      setDuration,
+      setInsuranceRate,
+      setInterestRate,
+      setFormValue,
+    },
+    dispatch,
+  );
 
 export interface StateProps {
   capital: number;
@@ -49,7 +50,7 @@ type AllProps = StateProps & DispatchProps;
 class Form extends Component<AllProps> {
   onChange = (type: FormField, value: string) => {
     this.props.setFormValue({ [type]: value });
-  }
+  };
 
   render() {
     const {

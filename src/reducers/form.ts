@@ -21,8 +21,10 @@ export type FormField = keyof FormState;
 
 export type FormValue = Partial<FormState>;
 
-const setFormValue = (state: FormState, payload: FormValue): FormState =>
-  ({ ...state, ...payload });
+const setFormValue = (state: FormState, payload: FormValue): FormState => ({
+  ...state,
+  ...payload,
+});
 
 const initialState = {
   capital: 305000,
