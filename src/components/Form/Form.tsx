@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+/** @jsx jsx */
+import { Component } from 'react';
 import NumberInput from 'material-ui-number-input';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
+import { css, jsx } from '@emotion/core';
 
 import {
   setCapital,
@@ -14,7 +16,16 @@ import { FormField } from 'reducers/form';
 import { GlobalState } from 'reducers';
 
 import FormSelector from './FormSelector';
-import styles from './Form.scss';
+
+const containerCSS = css`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 40px;
+  > div {
+    margin-right: 20px;
+  }
+`;
 
 const mapDispatchToProps = (dispatch: Dispatch<GlobalState>) =>
   bindActionCreators(
@@ -62,7 +73,7 @@ class Form extends Component<AllProps> {
       intercalaryFees,
     } = this.props;
     return (
-      <div className={styles.container}>
+      <div css={containerCSS}>
         <NumberInput
           id="capital"
           min={0}

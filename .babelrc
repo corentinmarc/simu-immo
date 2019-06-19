@@ -1,7 +1,13 @@
 {
-  "presets": ["es2015", "react"],
-  "plugins": [
-    "transform-object-rest-spread",
-    "babel-plugin-lodash"
-  ]
+  "presets": [
+    "@babel/preset-react",
+    "@babel/preset-env",
+    [
+      "@emotion/babel-preset-css-prop",
+      {
+        "sourceMap": false
+      }
+    ]
+  ],
+  "plugins": ["lodash"]
 }

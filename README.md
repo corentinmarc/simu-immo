@@ -5,10 +5,11 @@
 A small POC (Proof Of Concept) project consisting in building a mortgage simulator.
 
 **Technos involved:**
+
 - React / Redux / Reselect
 - Typescript 3
 - Webpack 4
+- Emotion 💅& CSS Modules
 - CircleCI
-
 
 [See online](http://simu-immo.corentinmarc.fr/)
