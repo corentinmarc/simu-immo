@@ -58,10 +58,14 @@ const Form = ({
       <NumberInput
         id="capital"
         min={0}
-        max={1000000}
+        max={10000000}
         floatingLabelText="Capital &agrave; emprunter"
         value={capital.toString()}
-        onChange={(e, value) => onChange('capital', value)}
+        onChange={(e, value) => {
+          if (+value >= 0 && +value <= 10000000) {
+            onChange('capital', value);
+          }
+        }}
       />
       <NumberInput
         id="interestRate"
@@ -69,7 +73,11 @@ const Form = ({
         max={100}
         floatingLabelText="Taux int&eacute;r&ecirc;t (%)"
         value={interestRate.toString()}
-        onChange={(e, value) => onChange('interestRate', value)}
+        onChange={(e, value) => {
+          if (+value >= 0 && +value <= 100) {
+            onChange('interestRate', value);
+          }
+        }}
       />
       <NumberInput
         id="insuranceRate"
@@ -77,7 +85,11 @@ const Form = ({
         max={100}
         floatingLabelText="Taux assurance (%)"
         value={insuranceRate.toString()}
-        onChange={(e, value) => onChange('insuranceRate', value)}
+        onChange={(e, value) => {
+          if (+value >= 0 && +value <= 100) {
+            onChange('insuranceRate', value);
+          }
+        }}
       />
       <NumberInput
         id="duration"
@@ -85,7 +97,11 @@ const Form = ({
         max={100}
         floatingLabelText="Dur&eacute;e emprunt (ann&eacute;es)"
         value={duration.toString()}
-        onChange={(e, value) => onChange('duration', value)}
+        onChange={(e, value) => {
+          if (+value >= 0 && +value <= 100) {
+            onChange('duration', value);
+          }
+        }}
       />
       <NumberInput
         id="notaryRate"
@@ -93,15 +109,23 @@ const Form = ({
         max={100}
         floatingLabelText="Taux notaire (%)"
         value={notaryRate.toString()}
-        onChange={(e, value) => onChange('notaryRate', value)}
+        onChange={(e, value) => {
+          if (+value >= 0 && +value <= 100) {
+            onChange('notaryRate', value);
+          }
+        }}
       />
       <NumberInput
         id="intercalaryFees"
         min={0}
-        max={100}
+        max={100000}
         floatingLabelText="Frais intercalaire (&euro;)"
         value={intercalaryFees.toString()}
-        onChange={(e, value) => onChange('intercalaryFees', value)}
+        onChange={(e, value) => {
+          if (+value >= 0 && +value <= 100000) {
+            onChange('intercalaryFees', value);
+          }
+        }}
       />
     </div>
   );
