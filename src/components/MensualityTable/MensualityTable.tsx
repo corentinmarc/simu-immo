@@ -1,9 +1,12 @@
 /** @jsx jsx */
 import { Component } from 'react';
-import { range } from 'lodash-es';
 import { jsx, css } from '@emotion/core';
 
+import { setComputingData, setComputedData } from 'actions/data';
 import { sansSerif } from 'styles/fonts';
+import { computeDatas } from 'services/dataComputingService';
+import { ComputedData } from 'types/data';
+
 import {
   lineCSS,
   lineCostCapitalCSS,
@@ -33,46 +36,6 @@ const tableContainerCSS = css`
   overflow: scroll;
 `;
 
-const computeCapitalPercent = (
-  i: number,
-  {
-    duration,
-    interestRate,
-  }: {
-    duration: number;
-    interestRate: number;
-  },
-) => (1 / (1 + interestRate / 12 / 100) ** (duration * 12 - i)) * 100;
-
-const getAverageCapitalPercent = ({
-  duration,
-  interestRate,
-}: {
-  duration: number;
-  interestRate: number;
-}) => {
-  const nbMonth = Number(duration) * 12 || 0;
-  return (
-    range(0, nbMonth)
-      .map(i => computeCapitalPercent(i, { duration, interestRate }), [])
-      .reduce((acc, cur) => acc + cur, 0) / nbMonth
-  );
-};
-
-interface Data {
-  month: number;
-  ratioInterest: number;
-  ratioCapital: number;
-  ratioInsurance: number;
-  costInterest: number;
-  costCapital: number;
-  costInsurance: number;
-  costCumulate: number;
-  percentCapital: number;
-  percentInterest: number;
-  percentInsurance: number;
-}
-
 export type MensualityTableStateProps = {
   capital: number;
   duration: number;
@@ -80,47 +43,24 @@ export type MensualityTableStateProps = {
   insuranceRate: number;
   notaryRate: number;
   intercalaryFees: number;
+  isComputing: boolean;
+  computedData: ComputedData | null;
 };
 
-export type MensualityTableDispatchProps = {};
+export type MensualityTableDispatchProps = {
+  setComputingData: typeof setComputingData;
+  setComputedData: typeof setComputedData;
+};
 
 type AllProps = MensualityTableStateProps & MensualityTableDispatchProps;
 
-interface State {
+type State = {
   props: AllProps;
-  datas: Data[];
-  totalCost: number;
-  totalInterestCost: number;
-  totalCapitalCost: number;
-  totalInsuranceCost: number;
-  notaryCost: number;
-  mensualityCost: number;
-  totalRatioCapital: number;
-  totalRatioInterest: number;
-  totalRatioInsurance: number;
-  intercalaryFees: number;
-  startCost: number;
-  greatTotalCost: number;
-  computing: boolean;
-}
+};
 
 class MensualityTable extends Component<AllProps, State> {
   state = {
     props: {} as AllProps,
-    datas: [] as Data[],
-    totalCost: 0,
-    totalInterestCost: 0,
-    totalCapitalCost: 0,
-    totalInsuranceCost: 0,
-    notaryCost: 0,
-    mensualityCost: 0,
-    totalRatioCapital: 0,
-    totalRatioInterest: 0,
-    totalRatioInsurance: 0,
-    intercalaryFees: 0,
-    startCost: 0,
-    greatTotalCost: 0,
-    computing: false,
   };
 
   componentWillMount() {
@@ -177,89 +117,32 @@ class MensualityTable extends Component<AllProps, State> {
     notaryRate: number;
     intercalaryFees: number;
   }) => {
-    const nbMonth = Number(duration) * 12 || 0;
-    const totalInsurancePercent = insuranceRate * duration;
-    const totalCapitalPercent = getAverageCapitalPercent({
-      duration,
-      interestRate,
-    });
+    // @todo use saga to trigger data computation and isComputing flag management
+    this.props.setComputingData({ isComputing: true });
 
-    this.setState({ computing: true }, async () =>
-      setTimeout(() => {
-        let datas = range(0, nbMonth).map(i => {
-          const percentCapital = computeCapitalPercent(i, {
-            duration,
-            interestRate,
-          });
-          return {
-            percentCapital,
-            month: i,
-            percentInterest: 100 - percentCapital,
-            percentInsurance: totalInsurancePercent,
-            ratioCapital:
-              percentCapital /
-              (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
-            ratioInterest:
-              (100 - percentCapital) /
-              (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
-            ratioInsurance:
-              (totalInsurancePercent * totalCapitalPercent) /
-              100 /
-              (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
-          };
-        });
+    setTimeout(() => {
+      const computedDatas = computeDatas({
+        capital,
+        duration,
+        insuranceRate,
+        intercalaryFees,
+        interestRate,
+        notaryRate,
+      });
 
-        const totalRatioInterest =
-          datas.reduce((acc, { ratioInterest }) => acc + ratioInterest, 0) /
-          nbMonth;
-        const totalRatioCapital =
-          datas.reduce((acc, { ratioCapital }) => acc + ratioCapital, 0) /
-          nbMonth;
-        const totalRatioInsurance =
-          datas.reduce((acc, { ratioInsurance }) => acc + ratioInsurance, 0) /
-          nbMonth;
-        const totalCost = capital / totalRatioCapital;
-        const totalInterestCost = totalCost * totalRatioInterest;
-        const totalInsuranceCost = totalCost * totalRatioInsurance;
-        const totalCapitalCost = totalCost * totalRatioCapital;
-        const mensualityCost = totalCost / duration / 12;
-        const notaryCost = (capital * notaryRate) / 100;
-        const startCost = notaryCost + Number(intercalaryFees);
-        const greatTotalCost = totalCost + startCost;
-
-        datas = datas.map((data, i) => ({
-          ...data,
-          costInterest: mensualityCost * data.ratioInterest,
-          costCapital: mensualityCost * data.ratioCapital,
-          costInsurance: mensualityCost * data.ratioInsurance,
-          costCumulate: mensualityCost * (i + 1),
-        }));
-
-        this.setState({
-          totalRatioCapital,
-          totalRatioInterest,
-          totalRatioInsurance,
-          totalCapitalCost,
-          totalInterestCost,
-          totalInsuranceCost,
-          totalCost,
-          mensualityCost,
-          notaryCost,
-          greatTotalCost,
-          startCost,
-          datas: datas as Data[],
-          intercalaryFees: Number(intercalaryFees),
-          computing: false,
-        });
-      }, 0),
-    );
+      this.props.setComputedData(computedDatas);
+      this.props.setComputingData({ isComputing: false });
+    }, 0);
   };
 
   renderTable() {
+    if (!this.props.computedData) {
+      return;
+    }
+
     const {
-      datas,
+      monthsDatas,
       startCost,
-      computing,
       totalRatioCapital,
       totalRatioInsurance,
       totalRatioInterest,
@@ -268,9 +151,11 @@ class MensualityTable extends Component<AllProps, State> {
       totalInsuranceCost,
       totalCost,
       greatTotalCost,
-    } = this.state;
+    } = this.props.computedData;
 
-    if (computing) {
+    const { isComputing } = this.props;
+
+    if (isComputing) {
       return <div>computing...</div>;
     }
 
@@ -278,7 +163,7 @@ class MensualityTable extends Component<AllProps, State> {
       <div css={tableCSS}>
         <div css={tableContainerCSS}>
           <MensualityTableHeader />
-          {datas.map(
+          {monthsDatas.map(
             ({
               month,
               ratioInterest,
@@ -293,7 +178,7 @@ class MensualityTable extends Component<AllProps, State> {
               const monthLine = (
                 <div key={`month-${month}`} css={lineCSS}>
                   <div css={lineMonthCSS}>
-                    {month + 1} / {datas.length}
+                    {month + 1} / {monthsDatas.length}
                   </div>
                   <div css={lineCostCapitalCSS}>
                     <span css={priceCSS}>
@@ -335,31 +220,31 @@ class MensualityTable extends Component<AllProps, State> {
 
               if (!((month + 1) % 12)) {
                 const year = Math.ceil(month / 12);
-                const costCapitalYear = datas
+                const costCapitalYear = monthsDatas
                   .slice(0, year * 12)
                   .reduce((acc, data) => acc + data.costCapital, 0);
                 const ratioCapitalYear =
-                  datas
+                  monthsDatas
                     .slice(0, year * 12)
                     .reduce((acc, data) => acc + data.ratioCapital, 0) /
                   (year * 12);
-                const costInterestYear = datas
+                const costInterestYear = monthsDatas
                   .slice(0, year * 12)
                   .reduce((acc, data) => acc + data.costInterest, 0);
                 const ratioInterestYear =
-                  datas
+                  monthsDatas
                     .slice(0, year * 12)
                     .reduce((acc, data) => acc + data.ratioInterest, 0) /
                   (year * 12);
-                const costInsuranceYear = datas
+                const costInsuranceYear = monthsDatas
                   .slice(0, year * 12)
                   .reduce((acc, data) => acc + data.costInsurance, 0);
                 const ratioInsuranceYear =
-                  datas
+                  monthsDatas
                     .slice(0, year * 12)
                     .reduce((acc, data) => acc + data.ratioInsurance, 0) /
                   (year * 12);
-                const costCumulateYear = datas.slice(year * 12 - 1)[0]
+                const costCumulateYear = monthsDatas.slice(year * 12 - 1)[0]
                   .costCumulate;
 
                 const yearLine = (
