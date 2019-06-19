@@ -80,6 +80,7 @@ interface State {
   intercalaryFees: number;
   startCost: number;
   greatTotalCost: number;
+  computing: boolean;
 }
 
 class MensualityTable extends Component<AllProps, State> {
@@ -98,6 +99,7 @@ class MensualityTable extends Component<AllProps, State> {
     intercalaryFees: 0,
     startCost: 0,
     greatTotalCost: 0,
+    computing: false,
   };
 
   componentWillMount() {
@@ -160,69 +162,76 @@ class MensualityTable extends Component<AllProps, State> {
       duration,
       interestRate,
     });
-    let datas = range(0, nbMonth).map(i => {
-      const percentCapital = computeCapitalPercent(i, {
-        duration,
-        interestRate,
-      });
-      return {
-        percentCapital,
-        month: i,
-        percentInterest: 100 - percentCapital,
-        percentInsurance: totalInsurancePercent,
-        ratioCapital:
-          percentCapital /
-          (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
-        ratioInterest:
-          (100 - percentCapital) /
-          (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
-        ratioInsurance:
-          (totalInsurancePercent * totalCapitalPercent) /
-          100 /
-          (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
-      };
-    });
 
-    const totalRatioInterest =
-      datas.reduce((acc, { ratioInterest }) => acc + ratioInterest, 0) /
-      nbMonth;
-    const totalRatioCapital =
-      datas.reduce((acc, { ratioCapital }) => acc + ratioCapital, 0) / nbMonth;
-    const totalRatioInsurance =
-      datas.reduce((acc, { ratioInsurance }) => acc + ratioInsurance, 0) /
-      nbMonth;
-    const totalCost = capital / totalRatioCapital;
-    const totalInterestCost = totalCost * totalRatioInterest;
-    const totalInsuranceCost = totalCost * totalRatioInsurance;
-    const totalCapitalCost = totalCost * totalRatioCapital;
-    const mensualityCost = totalCost / duration / 12;
-    const notaryCost = (capital * notaryRate) / 100;
-    const startCost = notaryCost + Number(intercalaryFees);
-    const greatTotalCost = totalCost + startCost;
+    this.setState({ computing: true }, async () =>
+      setTimeout(() => {
+        let datas = range(0, nbMonth).map(i => {
+          const percentCapital = computeCapitalPercent(i, {
+            duration,
+            interestRate,
+          });
+          return {
+            percentCapital,
+            month: i,
+            percentInterest: 100 - percentCapital,
+            percentInsurance: totalInsurancePercent,
+            ratioCapital:
+              percentCapital /
+              (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
+            ratioInterest:
+              (100 - percentCapital) /
+              (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
+            ratioInsurance:
+              (totalInsurancePercent * totalCapitalPercent) /
+              100 /
+              (100 + (totalInsurancePercent * totalCapitalPercent) / 100),
+          };
+        });
 
-    datas = datas.map((data, i) => ({
-      ...data,
-      costInterest: mensualityCost * data.ratioInterest,
-      costCapital: mensualityCost * data.ratioCapital,
-      costInsurance: mensualityCost * data.ratioInsurance,
-      costCumulate: mensualityCost * (i + 1),
-    }));
+        const totalRatioInterest =
+          datas.reduce((acc, { ratioInterest }) => acc + ratioInterest, 0) /
+          nbMonth;
+        const totalRatioCapital =
+          datas.reduce((acc, { ratioCapital }) => acc + ratioCapital, 0) /
+          nbMonth;
+        const totalRatioInsurance =
+          datas.reduce((acc, { ratioInsurance }) => acc + ratioInsurance, 0) /
+          nbMonth;
+        const totalCost = capital / totalRatioCapital;
+        const totalInterestCost = totalCost * totalRatioInterest;
+        const totalInsuranceCost = totalCost * totalRatioInsurance;
+        const totalCapitalCost = totalCost * totalRatioCapital;
+        const mensualityCost = totalCost / duration / 12;
+        const notaryCost = (capital * notaryRate) / 100;
+        const startCost = notaryCost + Number(intercalaryFees);
+        const greatTotalCost = totalCost + startCost;
 
-    this.setState({
-      totalRatioCapital,
-      totalRatioInterest,
-      totalRatioInsurance,
-      totalCapitalCost,
-      totalInterestCost,
-      totalInsuranceCost,
-      totalCost,
-      mensualityCost,
-      notaryCost,
-      greatTotalCost,
-      startCost,
-      datas: datas as Data[],
-      intercalaryFees: Number(intercalaryFees),
-    });
+        datas = datas.map((data, i) => ({
+          ...data,
+          costInterest: mensualityCost * data.ratioInterest,
+          costCapital: mensualityCost * data.ratioCapital,
+          costInsurance: mensualityCost * data.ratioInsurance,
+          costCumulate: mensualityCost * (i + 1),
+        }));
+
+        this.setState({
+          totalRatioCapital,
+          totalRatioInterest,
+          totalRatioInsurance,
+          totalCapitalCost,
+          totalInterestCost,
+          totalInsuranceCost,
+          totalCost,
+          mensualityCost,
+          notaryCost,
+          greatTotalCost,
+          startCost,
+          datas: datas as Data[],
+          intercalaryFees: Number(intercalaryFees),
+          computing: false,
+        });
+      }, 0),
+    );
   };
 
   renderTableTotal() {
@@ -283,7 +292,11 @@ class MensualityTable extends Component<AllProps, State> {
   }
 
   renderTable() {
-    const { datas, startCost } = this.state;
+    const { datas, startCost, computing } = this.state;
+
+    if (computing) {
+      return <div>computing...</div>;
+    }
 
     return (
       <div className={styles['table']}>
@@ -302,7 +315,7 @@ class MensualityTable extends Component<AllProps, State> {
             }) => {
               const result = [];
               const monthLine = (
-                <div className={styles['line']}>
+                <div key={`month-${month}`} className={styles['line']}>
                   <div className={styles['line-month']}>
                     {month + 1} / {datas.length}
                   </div>
@@ -375,6 +388,7 @@ class MensualityTable extends Component<AllProps, State> {
 
                 const yearLine = (
                   <div
+                    key={`year-${year}`}
                     className={classnames(styles['line'], styles['line-year'])}
                   >
                     <div className={styles['line-month']}>

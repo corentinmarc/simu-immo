@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
-      "module": "esnext",
-      "moduleResolution": "node",
-      "target": "es3",
-      "strict": true,
-      "noFallthroughCasesInSwitch": true,
-      "noImplicitReturns": true,
-      "noUnusedLocals": true,
-      "resolveJsonModule": true,
-      "jsx": "react",
-      "removeComments": true,
-      "preserveConstEnums": true,
-      "sourceMap": true,
-      "allowSyntheticDefaultImports": true,
-      "diagnostics": true,
-      "locale": "fr",
-      "baseUrl": "src"
-  },
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es3",
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "diagnostics": true,
+    "locale": "fr",
+    "baseUrl": "src",
+    "lib": ["es2015", "dom"]
+  }
 }
