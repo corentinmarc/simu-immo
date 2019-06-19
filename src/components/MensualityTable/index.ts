@@ -1,1 +1,1 @@
-export { default } from './MensualityTable';
+export { default } from './MensualityTableContainer';

@@ -3,7 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Header from 'components/Header';
 import Form from 'components/Form';
-import MensualityTable from '../MensualityTable/MensualityTable';
+import MensualityTable from '../MensualityTable';
 
 const App = () => (
   <MuiThemeProvider>
