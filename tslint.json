@@ -1,12 +1,14 @@
 {
   "extends": [
     "tslint-config-airbnb",
+    "tslint-react-hooks",
     "tslint-plugin-prettier",
     "tslint-config-prettier"
   ],
   "rules": {
     "prettier": true,
     "import-name": false,
+    "react-hooks-nesting": "error",
     "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"]
   }
 }
