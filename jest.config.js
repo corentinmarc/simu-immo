@@ -1,17 +1,8 @@
 module.exports = {
-  roots: [
-    '<rootDir>/src',
-  ],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.jsx?$': 'babel-jest',
   },
+  transformIgnorePatterns: ['/node_modules/(?!lodash-es)'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
-  moduleFileExtensions: [
-    'ts',
-    'tsx',
-    'js',
-    'jsx',
-    'json',
-    'node',
-  ],
 };
