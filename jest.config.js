@@ -5,4 +5,5 @@ module.exports = {
   },
   transformIgnorePatterns: ['/node_modules/(?!lodash-es)'],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
+  collectCoverageFrom: ['**/src/**/*.(ts|tsx)'],
 };
